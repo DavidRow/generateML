@@ -1,5 +1,7 @@
 import os
-
+import helper
+import tensorflow as tf
+import GAN as gan
 import numpy as np
 import torch
 import torch.nn as nn
@@ -10,58 +12,35 @@ from   pytorch_lightning import LightningDataModule, LightningModule, Trainer
 from   pytorch_lightning.callbacks.progress import TQDMProgressBar
 from   torch.utils.data import DataLoader, random_split
 from   torchvision.datasets import MNIST
+import tenserGAN 
 from PIL import Image
+import matplotlib.pyplot as plt
 
 #seed with value of 10 for reproducibility
 seed = 10
 np.random.seed(seed)
 
-#fetch the images and put them into an array
-def loadData(directory):
-    image_list = []
-    for filename in os.listdir(directory):
-        if filename.endswith('.jpg') or filename.endswith('.png'):
-            image = Image.open(os.path.join(directory, filename))
-            image_array = np.array(image)
-            image_list.append(image_array)
 
-    return np.stack(image_list)
-#patingsArr = loadData('patings')
-#photosArr = loadData('photo_jpg')
 
-#save it to the hard drive
-#np.save('patings/patings.npy', patingsArr)
-#np.save('photo_jpg/photo_jpg.npy', photosArr)
-
+#
 #load the arrays for use
-patingsArr = np.load('patings/patings.npy')
-photosArr  = np.load('photo_jpg/photo_jpg.npy')
+photo_jpg, patings_jpg = helper.loadArray()
 
-#shuffle training and test
-np.random.shuffle(patingsArr)
-np.random.shuffle(photosArr)
-test_proportion = 0.2
-
-#get proprotions 
-test_size_paint = int(test_proportion * len(patingsArr))
-test_size_photos = int(test_proportion * len(photosArr))
-
-#split testing data
-test_data_patings = patingsArr[:test_size_paint]
-training_data_patings = patingsArr[test_size_paint:]
-
-#split photos data
-test_data_photos = photosArr[:test_size_photos]
-training_data_photos = photosArr[test_size_photos:]
-
-#Generator
-class generator(nn.Module):
-    def __init__(self, latent_dim, img_shape):
-        super().__init__()
-        self.img_shape = img_shape
+#split them into training and test
+test_data_photos, training_data_photos, test_data_patings, training_data_patings = helper.splitData(patings_jpg, photo_jpg)
 
 
-#Discriminator(racist)
-class racist(nn.Module):
-    def __init__(self, img_shape):
-        super().__init__()
+# make GAN
+GAN = gan.RGAN(3, 256, 256)
+#print(training_data_photos[0].shape)
+#training_data_photos = training_data_photos
+generator = tenserGAN.make_generator_model()
+noise = tf.random.normal([1, 100])
+generated_image = generator(noise, training=False)
+
+plt.imshow(generated_image[0, :, :, 0], cmap='gray')
+#plt.show()
+#GAN.training_step(torch.flatten(training_data_photos[1]) , 0)
+
+
+
