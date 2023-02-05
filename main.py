@@ -31,15 +31,17 @@ test_data_photos, training_data_photos, test_data_patings, training_data_patings
 
 
 # make GAN
-GAN = gan.RGAN(3, 256, 256)
+#GAN = gan.RGAN(3, 256, 256)
 #print(training_data_photos[0].shape)
 #training_data_photos = training_data_photos
-generator = tenserGAN.make_generator_model()
-noise = tf.random.normal([1, 100])
-generated_image = generator(noise, training=False)
+generator = tenserGAN.make_generator_model()    
+generated_image = generator(training_data_photos[0:1], training=False)
 
-plt.imshow(generated_image[0, :, :, 0], cmap='gray')
-#plt.show()
+plt.imshow(training_data_photos[0])
+plt.show()
+print(generated_image.shape)
+plt.imshow(generated_image[0])
+plt.show()
 #GAN.training_step(torch.flatten(training_data_photos[1]) , 0)
 
 
