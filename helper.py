@@ -12,6 +12,7 @@ from   torch.utils.data import DataLoader, random_split
 from   torchvision.datasets import MNIST
 import tensorflow as tf
 from PIL import Image
+import matplotlib.pyplot as plt
 
 #seed with value of 10 for reproducibility
 seed = 10
@@ -58,3 +59,10 @@ def loadArray():
     photos = np.load('photo_jpg/photos.npy')
     patings = np.load('patings/patings.npy')
     return photos,patings
+
+
+def printImages(photo, generated):
+    _ , axarr= plt.subplots(1,2)
+    axarr[0].imshow(photo)
+    axarr[1].imshow(generated)
+    plt.show()

@@ -21,8 +21,6 @@ seed = 10
 np.random.seed(seed)
 
 
-
-#
 #load the arrays for use
 photo_jpg, patings_jpg = helper.loadArray()
 
@@ -31,18 +29,32 @@ test_data_photos, training_data_photos, test_data_patings, training_data_patings
 
 
 # make GAN
-#GAN = gan.RGAN(3, 256, 256)
-#print(training_data_photos[0].shape)
-#training_data_photos = training_data_photos
 generator = tenserGAN.make_generator_model()    
 generated_image = generator(training_data_photos[0:1], training=False)
 
-plt.imshow(training_data_photos[0])
-plt.show()
-print(generated_image.shape)
-plt.imshow(generated_image[0])
-plt.show()
-#GAN.training_step(torch.flatten(training_data_photos[1]) , 0)
+# make racist 
+discriminator = tenserGAN.make_discriminator_model()
+
+# optimizers?
+generator_optimizer = tf.keras.optimizers.Adam(1e-4)
+discriminator_optimizer = tf.keras.optimizers.Adam(1e-4)
+
+
+# Training time baby
+epochs = 1
+newgenerator = tenserGAN.train(generator, discriminator, generator_optimizer, discriminator_optimizer, epochs, training_data_photos, training_data_patings)
+
+# generate an image as a test
+generatedpainting = newgenerator(training_data_photos[0:1], training=False)
+tenserGAN.printImages(training_data_photos[0], generatedpainting )
+
+
+
+
+
+
+
+
 
 
 
