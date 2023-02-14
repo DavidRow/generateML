@@ -36,7 +36,7 @@ generated_image = generator(training_data_photos[0:1], training=False)
 discriminator = tenserGAN.make_discriminator_model()
 
 # optimizers?
-generator_optimizer = tf.keras.optimizers.Adam(1e-4)
+generator_optimizer = tf.keras.optimizers.Adam(1e-4)    
 discriminator_optimizer = tf.keras.optimizers.Adam(1e-4)
 
 
